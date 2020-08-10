@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+ <article class="media content-section">
+ <form method="POST" action="">
+     {{ form.hidden_tag() }}
+     {{ form.csrf_token }}
+     <fieldset class="form-group">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+        <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
+              <small class="text-muted">{{ post.created_at.strftime('%d %B %Y') }}</small>
+              {% if post.author == current_user %}
+            <div>
+                <a class="btn btn-secondary btn-sm mb-1" href="{{ url_for('posts.update_post', post_id=post.id) }}">Update</a>
+                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+
+            </div>
+        {% endif%}
+        </div>
+        <h2 class="article-title">{{ post.title }}</h2>
+        <p class="article-content">{{ post.body }}</p>
+        </div>
+
+        <div>
+            {{ form.body.label }}
+            {% if form.body.errors %}
+              {{ form.body(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                  {% for error in form.body.errors %}
+                      <span>{{ error }}</span>
+                  {% endfor %}
+              </div>
+          {% else %}
+              {{ form.body(class="form-control form-control-lg") }}
+          {% endif %}
+        </div>
+  </fieldset>
+     {{ form.submit(class="btn btn-sm btn-info mt-2") }}
+</form>
+
+</article>
+<div class="post">
+    <div class="post-footer">
+
+       {% include "comment.html" %}
+    </div>
+</div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+                <input class="btn btn-danger" type="submit" value="Delete">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}

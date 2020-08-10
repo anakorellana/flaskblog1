@@ -1,0 +1,36 @@
+
+
+
+{% block body %}
+
+<ul class="comments-list">
+    {% for comment in comments %}
+    <li class="comment">
+        <a class="float-left" href="#">
+            {% if comment.author.image_file %}
+                 <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+            {% else %}
+                <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/generic_avatar.png') }}" alt="avatar">
+            {% endif %}
+
+           <div class="article float-left metadata">
+            <a class="comment-author"> {{ comment.author.username }} </a>
+           </div>
+            <br>
+               <h6 class="text-muted">{{ comment.comment.created_at }}</h6>
+    <div class="comment-body">
+       {{ comment.comment.body }}
+    </div>
+
+    </li>
+    <hr>
+    {% endfor %}
+</ul>
+
+{% endblock body %}
+
+
+
+
+
+
